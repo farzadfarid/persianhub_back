@@ -1,0 +1,6 @@
+@PersianHub_HostAddress = http://localhost:5239
+
+GET {{PersianHub_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

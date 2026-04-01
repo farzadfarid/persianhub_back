@@ -1,0 +1,44 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using PersianHub.API.Common;
+using PersianHub.API.DTOs.Layer2Core;
+using PersianHub.API.Interfaces.Layer2Core;
+
+namespace PersianHub.API.Controllers.Admin;
+
+/// <summary>
+/// Admin management of all businesses on the platform.
+/// Admin bypasses ownership restrictions (enforced in BusinessService).
+/// Deletion is not exposed — use deactivate to preserve data integrity.
+/// </summary>
+[Route("api/v1/admin/businesses")]
+[Authorize(Roles = AppRoles.Admin)]
+public sealed class AdminBusinessesController(IBusinessService businessService) : ApiControllerBase
+{
+    /// <summary>Returns all businesses on the platform.</summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(IReadOnlyList<BusinessListItemDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+        => MapResult(await businessService.GetAllAsync(ct));
+
+    /// <summary>Returns full details for any business by id.</summary>
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(BusinessDetailsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(int id, CancellationToken ct)
+        => MapResult(await businessService.GetByIdAsync(id, ct));
+
+    /// <summary>Activates a business — makes it visible in public listings.</summary>
+    [HttpPut("{id:int}/activate")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Activate(int id, CancellationToken ct)
+        => MapResult(await businessService.SetActiveStatusAsync(id, true, ct));
+
+    /// <summary>Deactivates a business — hides it from public listings. Does not delete data.</summary>
+    [HttpPut("{id:int}/deactivate")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Deactivate(int id, CancellationToken ct)
+        => MapResult(await businessService.SetActiveStatusAsync(id, false, ct));
+}
