@@ -213,6 +213,22 @@ public sealed class BusinessService(
         return Result.Success();
     }
 
+    public async Task<Result> SetFeaturedStatusAsync(int id, bool isFeatured, CancellationToken ct = default)
+    {
+        var business = await db.Businesses.FirstOrDefaultAsync(b => b.Id == id, ct);
+        if (business is null)
+            return Result.Failure($"Business with id {id} not found.", ErrorCodes.NotFound);
+
+        business.IsFeatured = isFeatured;
+        business.UpdatedAtUtc = clock.UtcNow;
+        await db.SaveChangesAsync(ct);
+
+        var action = isFeatured ? AuditActions.BusinessFeatured : AuditActions.BusinessUnfeatured;
+        await audit.WriteAsync(action, "Business", business.Id.ToString(), new { business.Name });
+
+        return Result.Success();
+    }
+
     /// <summary>
     /// Returns Success if the current user is Admin or owns the given business.
     /// Returns a Forbidden failure otherwise.

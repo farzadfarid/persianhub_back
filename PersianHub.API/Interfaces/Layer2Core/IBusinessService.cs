@@ -12,4 +12,5 @@ public interface IBusinessService
     Task<Result<IReadOnlyList<BusinessListItemDto>>> GetMyBusinessesAsync(CancellationToken ct = default);
     Task<Result<BusinessDetailsDto>> UpdateAsync(int id, UpdateBusinessRequestDto request, CancellationToken ct = default);
     Task<Result> SetActiveStatusAsync(int id, bool isActive, CancellationToken ct = default);
+    Task<Result> SetFeaturedStatusAsync(int id, bool isFeatured, CancellationToken ct = default);
 }

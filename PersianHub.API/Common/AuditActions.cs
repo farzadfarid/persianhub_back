@@ -17,6 +17,8 @@ public static class AuditActions
     public const string BusinessUpdated      = "BusinessUpdated";
     public const string BusinessActivated    = "BusinessActivated";
     public const string BusinessDeactivated  = "BusinessDeactivated";
+    public const string BusinessFeatured     = "BusinessFeatured";
+    public const string BusinessUnfeatured   = "BusinessUnfeatured";
 
     // Business Claim
     public const string BusinessClaimApproved = "BusinessClaimApproved";

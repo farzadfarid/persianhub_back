@@ -71,4 +71,18 @@ public sealed class AdminBusinessesController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Deactivate(int id, CancellationToken ct)
         => MapResult(await businessService.SetActiveStatusAsync(id, false, ct));
+
+    /// <summary>Marks a business as featured — boosts it to the top of search results.</summary>
+    [HttpPut("{id:int}/feature")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Feature(int id, CancellationToken ct)
+        => MapResult(await businessService.SetFeaturedStatusAsync(id, true, ct));
+
+    /// <summary>Removes featured status from a business.</summary>
+    [HttpPut("{id:int}/unfeature")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Unfeature(int id, CancellationToken ct)
+        => MapResult(await businessService.SetFeaturedStatusAsync(id, false, ct));
 }
