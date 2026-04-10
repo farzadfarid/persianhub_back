@@ -43,8 +43,10 @@ public sealed class DailyOfferService(ApplicationDbContext db, IDateTimeProvider
         {
             BusinessId = request.BusinessId,
             Title = request.Title.Trim(),
+            TitleFa = request.TitleFa?.Trim(),
             Slug = slug,
             Description = request.Description?.Trim(),
+            DescriptionFa = request.DescriptionFa?.Trim(),
             DiscountType = request.DiscountType,
             DiscountValue = request.DiscountValue,
             OriginalPrice = request.OriginalPrice,
@@ -139,7 +141,9 @@ public sealed class DailyOfferService(ApplicationDbContext db, IDateTimeProvider
             return Result<DailyOfferDto>.Failure($"DailyOffer with id {id} not found.", ErrorCodes.NotFound);
 
         entity.Title = request.Title.Trim();
+        entity.TitleFa = request.TitleFa?.Trim();
         entity.Description = request.Description?.Trim();
+        entity.DescriptionFa = request.DescriptionFa?.Trim();
         entity.DiscountType = request.DiscountType;
         entity.DiscountValue = request.DiscountValue;
         entity.OriginalPrice = request.OriginalPrice;
@@ -194,12 +198,12 @@ public sealed class DailyOfferService(ApplicationDbContext db, IDateTimeProvider
     }
 
     private static DailyOfferDto ToDto(DailyOffer d) => new(
-        d.Id, d.BusinessId, d.Title, d.Slug, d.Description, d.DiscountType,
-        d.DiscountValue, d.OriginalPrice, d.DiscountedPrice, d.Currency,
+        d.Id, d.BusinessId, d.Title, d.TitleFa, d.Slug, d.Description, d.DescriptionFa,
+        d.DiscountType, d.DiscountValue, d.OriginalPrice, d.DiscountedPrice, d.Currency,
         d.StartsAtUtc, d.EndsAtUtc, d.IsActive, d.IsPublished, d.CoverImageUrl,
         d.CreatedAtUtc, d.UpdatedAtUtc);
 
     private static DailyOfferListItemDto ToListItemDto(DailyOffer d) => new(
-        d.Id, d.BusinessId, d.Title, d.Slug, d.DiscountType, d.DiscountValue,
+        d.Id, d.BusinessId, d.Title, d.TitleFa, d.Slug, d.DiscountType, d.DiscountValue,
         d.StartsAtUtc, d.EndsAtUtc, d.IsActive, d.IsPublished, d.CoverImageUrl);
 }

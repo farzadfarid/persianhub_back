@@ -3,6 +3,8 @@ using PersianHub.API.Common;
 using PersianHub.API.Data;
 using PersianHub.API.DTOs.Layer3Network;
 using PersianHub.API.Entities.Layer2Core;
+using PersianHub.API.Enums.Layer2Core;
+using PersianHub.API.Enums.Layer3Network;
 using PersianHub.API.Interfaces.Layer3Network;
 
 namespace PersianHub.API.Services.Layer3Network;
@@ -63,9 +65,31 @@ public sealed class ReviewService(ApplicationDbContext db, IDateTimeProvider clo
 
         var items = await db.Reviews
             .AsNoTracking()
+            .Where(r => r.BusinessId == businessId && r.Status == ReviewStatus.Approved)
+            .OrderByDescending(r => r.CreatedAtUtc)
+            .Select(r => new ReviewListItemDto(
+                r.Id, r.BusinessId, r.AppUserId, r.Rating, r.Title, r.Comment, r.Status,
+                r.CreatedAtUtc,
+                db.ReviewReactions.Count(rr => rr.ReviewId == r.Id && rr.ReactionType == ReactionType.Like)))
+            .ToListAsync(ct);
+
+        return Result<IReadOnlyList<ReviewListItemDto>>.Success(items);
+    }
+
+    public async Task<Result<IReadOnlyList<ReviewListItemDto>>> GetAllByBusinessIdAsync(int businessId, CancellationToken ct = default)
+    {
+        var businessExists = await db.Businesses.AnyAsync(b => b.Id == businessId, ct);
+        if (!businessExists)
+            return Result<IReadOnlyList<ReviewListItemDto>>.Failure($"Business with id {businessId} not found.", ErrorCodes.NotFound);
+
+        var items = await db.Reviews
+            .AsNoTracking()
             .Where(r => r.BusinessId == businessId)
             .OrderByDescending(r => r.CreatedAtUtc)
-            .Select(r => new ReviewListItemDto(r.Id, r.BusinessId, r.AppUserId, r.Rating, r.Title, r.Status, r.CreatedAtUtc))
+            .Select(r => new ReviewListItemDto(
+                r.Id, r.BusinessId, r.AppUserId, r.Rating, r.Title, r.Comment, r.Status,
+                r.CreatedAtUtc,
+                db.ReviewReactions.Count(rr => rr.ReviewId == r.Id && rr.ReactionType == ReactionType.Like)))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<ReviewListItemDto>>.Success(items);
@@ -81,7 +105,10 @@ public sealed class ReviewService(ApplicationDbContext db, IDateTimeProvider clo
             .AsNoTracking()
             .Where(r => r.AppUserId == appUserId)
             .OrderByDescending(r => r.CreatedAtUtc)
-            .Select(r => new ReviewListItemDto(r.Id, r.BusinessId, r.AppUserId, r.Rating, r.Title, r.Status, r.CreatedAtUtc))
+            .Select(r => new ReviewListItemDto(
+                r.Id, r.BusinessId, r.AppUserId, r.Rating, r.Title, r.Comment, r.Status,
+                r.CreatedAtUtc,
+                db.ReviewReactions.Count(rr => rr.ReviewId == r.Id && rr.ReactionType == ReactionType.Like)))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<ReviewListItemDto>>.Success(items);
@@ -103,6 +130,41 @@ public sealed class ReviewService(ApplicationDbContext db, IDateTimeProvider clo
 
         await db.SaveChangesAsync(ct);
 
+        return Result<ReviewDto>.Success(ToDto(entity));
+    }
+
+    public async Task<Result> DeleteAsync(int id, CancellationToken ct = default)
+    {
+        var entity = await db.Reviews.FirstOrDefaultAsync(r => r.Id == id, ct);
+        if (entity is null)
+            return Result.Failure($"Review with id {id} not found.", ErrorCodes.NotFound);
+
+        db.Reviews.Remove(entity);
+        await db.SaveChangesAsync(ct);
+        return Result.Success();
+    }
+
+    public async Task<Result<ReviewDto>> ApproveAsync(int id, CancellationToken ct = default)
+    {
+        var entity = await db.Reviews.FirstOrDefaultAsync(r => r.Id == id, ct);
+        if (entity is null)
+            return Result<ReviewDto>.Failure($"Review with id {id} not found.", ErrorCodes.NotFound);
+
+        entity.Status = ReviewStatus.Approved;
+        entity.UpdatedAtUtc = clock.UtcNow;
+        await db.SaveChangesAsync(ct);
+        return Result<ReviewDto>.Success(ToDto(entity));
+    }
+
+    public async Task<Result<ReviewDto>> RejectAsync(int id, CancellationToken ct = default)
+    {
+        var entity = await db.Reviews.FirstOrDefaultAsync(r => r.Id == id, ct);
+        if (entity is null)
+            return Result<ReviewDto>.Failure($"Review with id {id} not found.", ErrorCodes.NotFound);
+
+        entity.Status = ReviewStatus.Rejected;
+        entity.UpdatedAtUtc = clock.UtcNow;
+        await db.SaveChangesAsync(ct);
         return Result<ReviewDto>.Success(ToDto(entity));
     }
 

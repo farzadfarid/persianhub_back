@@ -9,3 +9,22 @@ public record AdminUserListItemDto(
     bool IsActive,
     DateTime CreatedAtUtc
 );
+
+public record AdminBusinessListItemDto(
+    int Id,
+    string Name,
+    string? NameFa,
+    string Slug,
+    string? City,
+    string? PhoneNumber,
+    string? Email,
+    string? LogoUrl,
+    bool IsVerified,
+    bool IsFeatured,
+    bool IsActive,
+    int? OwnerUserId,
+    string? OwnerFirstName,
+    string? OwnerLastName,
+    string? OwnerEmail,
+    DateTime CreatedAtUtc
+);

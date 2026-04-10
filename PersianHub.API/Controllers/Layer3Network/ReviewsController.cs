@@ -33,7 +33,7 @@ public sealed class ReviewsController(IReviewService reviewService) : ApiControl
         return MapResult(result);
     }
 
-    /// <summary>Returns all reviews for a specific business.</summary>
+    /// <summary>Returns approved reviews for a specific business (public).</summary>
     [HttpGet("business/{businessId:int}")]
     [ProducesResponseType(typeof(IReadOnlyList<ReviewListItemDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,6 +41,46 @@ public sealed class ReviewsController(IReviewService reviewService) : ApiControl
     {
         var result = await reviewService.GetByBusinessIdAsync(businessId, ct);
         return MapResult(result);
+    }
+
+    /// <summary>Returns all reviews (all statuses) for a business — for the business owner.</summary>
+    [HttpGet("business/{businessId:int}/all")]
+    [ProducesResponseType(typeof(IReadOnlyList<ReviewListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetAllByBusiness(int businessId, CancellationToken ct)
+    {
+        var result = await reviewService.GetAllByBusinessIdAsync(businessId, ct);
+        return MapResult(result);
+    }
+
+    /// <summary>Approves a review (business owner action).</summary>
+    [HttpPatch("{id:int}/approve")]
+    [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Approve(int id, CancellationToken ct)
+    {
+        var result = await reviewService.ApproveAsync(id, ct);
+        return MapResult(result);
+    }
+
+    /// <summary>Rejects a review (business owner action).</summary>
+    [HttpPatch("{id:int}/reject")]
+    [ProducesResponseType(typeof(ReviewDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Reject(int id, CancellationToken ct)
+    {
+        var result = await reviewService.RejectAsync(id, ct);
+        return MapResult(result);
+    }
+
+    /// <summary>Deletes a review (business owner action).</summary>
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    {
+        var result = await reviewService.DeleteAsync(id, ct);
+        return result.IsSuccess ? NoContent() : MapResult(result);
     }
 
     /// <summary>Returns all reviews submitted by a specific user.</summary>

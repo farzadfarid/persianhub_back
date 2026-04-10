@@ -9,6 +9,18 @@ namespace PersianHub.API.Services.Layer2Core;
 
 public sealed class ContactRequestService(ApplicationDbContext db, IDateTimeProvider clock) : IContactRequestService
 {
+    public async Task<Result<IReadOnlyList<ContactRequestListItemDto>>> GetAllAsync(CancellationToken ct = default)
+    {
+        var items = await db.ContactRequests
+            .AsNoTracking()
+            .OrderByDescending(c => c.CreatedAtUtc)
+            .Select(c => new ContactRequestListItemDto(
+                c.Id, c.BusinessId, c.AppUserId, c.Name, c.ContactType, c.Status, c.IsConverted, c.CreatedAtUtc))
+            .ToListAsync(ct);
+
+        return Result<IReadOnlyList<ContactRequestListItemDto>>.Success(items);
+    }
+
     public async Task<Result<ContactRequestDto>> CreateAsync(CreateContactRequestDto request, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(request.Name))

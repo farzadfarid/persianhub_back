@@ -71,34 +71,44 @@ public class AuthService : IAuthService
 
     public async Task<Result<AuthResponseDto>> LoginAsync(LoginDto dto)
     {
-        var user = await _db.AppUsers.FirstOrDefaultAsync(u => u.Email == dto.Email);
-        if (user is null)
-        {
-            await _audit.WriteAsync(AuditActions.UserLoginFailed, "AppUser", null,
-                new { reason = "UserNotFound" });
-            return Result<AuthResponseDto>.Failure("Invalid email or password.", ErrorCodes.ValidationFailed);
-        }
-
-        PasswordVerificationResult verificationResult;
         try
         {
-            verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+            var user = await _db.AppUsers.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user is null)
+            {
+                await _audit.WriteAsync(AuditActions.UserLoginFailed, "AppUser", null,
+                    new { reason = "UserNotFound" });
+                return Result<AuthResponseDto>.Failure("Invalid email or password.", ErrorCodes.ValidationFailed);
+            }
+
+            PasswordVerificationResult verificationResult;
+            try
+            {
+                verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
+            }
+            catch
+            {
+                verificationResult = PasswordVerificationResult.Failed;
+            }
+
+            if (verificationResult == PasswordVerificationResult.Failed)
+            {
+                await _audit.WriteAsync(AuditActions.UserLoginFailed, "AppUser", user.Id.ToString(),
+                    new { reason = "InvalidPassword" });
+                return Result<AuthResponseDto>.Failure("Invalid email or password.", ErrorCodes.ValidationFailed);
+            }
+
+            await _audit.WriteAsync(AuditActions.UserLoginSucceeded, "AppUser", user.Id.ToString());
+
+            return Result<AuthResponseDto>.Success(BuildResponse(user));
+
         }
-        catch
+        catch (Exception e)
         {
-            verificationResult = PasswordVerificationResult.Failed;
+
+            throw;
         }
-
-        if (verificationResult == PasswordVerificationResult.Failed)
-        {
-            await _audit.WriteAsync(AuditActions.UserLoginFailed, "AppUser", user.Id.ToString(),
-                new { reason = "InvalidPassword" });
-            return Result<AuthResponseDto>.Failure("Invalid email or password.", ErrorCodes.ValidationFailed);
-        }
-
-        await _audit.WriteAsync(AuditActions.UserLoginSucceeded, "AppUser", user.Id.ToString());
-
-        return Result<AuthResponseDto>.Success(BuildResponse(user));
+       
     }
 
     private AuthResponseDto BuildResponse(AppUser user)
@@ -107,13 +117,18 @@ public class AuthService : IAuthService
         var expiration = _dateTime.UtcNow.AddMinutes(expireMinutes);
         var token = GenerateToken(user, expiration);
 
+        var displayName = !string.IsNullOrWhiteSpace(user.DisplayName)
+            ? user.DisplayName
+            : $"{user.FirstName} {user.LastName}".Trim();
+
         return new AuthResponseDto
         {
             Token = token,
             Expiration = expiration,
             UserId = user.Id,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
+            Name = displayName
         };
     }
 
@@ -122,10 +137,15 @@ public class AuthService : IAuthService
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        var displayName = !string.IsNullOrWhiteSpace(user.DisplayName)
+            ? user.DisplayName
+            : $"{user.FirstName} {user.LastName}".Trim();
+
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Name, displayName),
             new Claim(ClaimTypes.Role, user.Role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };

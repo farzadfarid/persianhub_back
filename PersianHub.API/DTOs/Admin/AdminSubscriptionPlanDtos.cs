@@ -4,8 +4,10 @@ namespace PersianHub.API.DTOs.Admin;
 
 public record CreateSubscriptionPlanAdminDto(
     string Name,
+    string? NameFa,
     string Code,
     string? Description,
+    string? DescriptionFa,
     decimal Price,
     string Currency,
     SubscriptionBillingCycle BillingCycle,
@@ -20,7 +22,9 @@ public record CreateSubscriptionPlanAdminDto(
 
 public record UpdateSubscriptionPlanAdminDto(
     string Name,
+    string? NameFa,
     string? Description,
+    string? DescriptionFa,
     decimal Price,
     string Currency,
     SubscriptionBillingCycle BillingCycle,

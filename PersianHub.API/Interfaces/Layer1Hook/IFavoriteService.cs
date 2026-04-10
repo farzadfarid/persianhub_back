@@ -11,4 +11,6 @@ public interface IFavoriteService
     Task<Result<FavoriteDto>> GetByIdAsync(int id, CancellationToken ct = default);
     Task<Result<IReadOnlyList<FavoriteListItemDto>>> GetByUserIdAsync(int appUserId, CancellationToken ct = default);
     Task<Result<bool>> IsFavoritedAsync(int appUserId, ReferenceType referenceType, int referenceId, CancellationToken ct = default);
+    Task<Result<int>> GetCountByReferenceAsync(ReferenceType referenceType, int referenceId, CancellationToken ct = default);
+    Task<Result<IReadOnlyList<BusinessFollowerDto>>> GetBusinessFollowersAsync(int businessId, CancellationToken ct = default);
 }

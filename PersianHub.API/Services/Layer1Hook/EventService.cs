@@ -53,18 +53,25 @@ public sealed class EventService(ApplicationDbContext db, IDateTimeProvider cloc
         var entity = new Event
         {
             Title = request.Title.Trim(),
+            TitleFa = request.TitleFa?.Trim(),
             Slug = slug,
             Description = request.Description?.Trim(),
+            DescriptionFa = request.DescriptionFa?.Trim(),
             LocationName = request.LocationName?.Trim(),
+            LocationNameFa = request.LocationNameFa?.Trim(),
             AddressLine = request.AddressLine?.Trim(),
+            AddressLineFa = request.AddressLineFa?.Trim(),
             City = request.City?.Trim(),
+            CityFa = request.CityFa?.Trim(),
             Region = request.Region?.Trim(),
+            RegionFa = request.RegionFa?.Trim(),
             PostalCode = request.PostalCode?.Trim(),
             Country = request.Country?.Trim(),
             StartsAtUtc = request.StartsAtUtc,
             EndsAtUtc = request.EndsAtUtc,
             BusinessId = request.BusinessId,
             OrganizerName = request.OrganizerName?.Trim(),
+            OrganizerNameFa = request.OrganizerNameFa?.Trim(),
             OrganizerPhoneNumber = request.OrganizerPhoneNumber?.Trim(),
             OrganizerEmail = request.OrganizerEmail?.Trim(),
             CoverImageUrl = request.CoverImageUrl?.Trim(),
@@ -165,17 +172,24 @@ public sealed class EventService(ApplicationDbContext db, IDateTimeProvider cloc
         }
 
         entity.Title = request.Title.Trim();
+        entity.TitleFa = request.TitleFa?.Trim();
         entity.Description = request.Description?.Trim();
+        entity.DescriptionFa = request.DescriptionFa?.Trim();
         entity.LocationName = request.LocationName?.Trim();
+        entity.LocationNameFa = request.LocationNameFa?.Trim();
         entity.AddressLine = request.AddressLine?.Trim();
+        entity.AddressLineFa = request.AddressLineFa?.Trim();
         entity.City = request.City?.Trim();
+        entity.CityFa = request.CityFa?.Trim();
         entity.Region = request.Region?.Trim();
+        entity.RegionFa = request.RegionFa?.Trim();
         entity.PostalCode = request.PostalCode?.Trim();
         entity.Country = request.Country?.Trim();
         entity.StartsAtUtc = request.StartsAtUtc;
         entity.EndsAtUtc = request.EndsAtUtc;
         entity.BusinessId = request.BusinessId;
         entity.OrganizerName = request.OrganizerName?.Trim();
+        entity.OrganizerNameFa = request.OrganizerNameFa?.Trim();
         entity.OrganizerPhoneNumber = request.OrganizerPhoneNumber?.Trim();
         entity.OrganizerEmail = request.OrganizerEmail?.Trim();
         entity.CoverImageUrl = request.CoverImageUrl?.Trim();
@@ -216,12 +230,14 @@ public sealed class EventService(ApplicationDbContext db, IDateTimeProvider cloc
     }
 
     private static EventDto ToDto(Event e) => new(
-        e.Id, e.Title, e.Slug, e.Description, e.LocationName, e.AddressLine,
-        e.City, e.Region, e.PostalCode, e.Country, e.StartsAtUtc, e.EndsAtUtc,
-        e.BusinessId, e.OrganizerName, e.OrganizerPhoneNumber, e.OrganizerEmail,
+        e.Id, e.Title, e.TitleFa, e.Slug, e.Description, e.DescriptionFa,
+        e.LocationName, e.LocationNameFa, e.AddressLine, e.AddressLineFa,
+        e.City, e.CityFa, e.Region, e.RegionFa, e.PostalCode, e.Country,
+        e.StartsAtUtc, e.EndsAtUtc, e.BusinessId,
+        e.OrganizerName, e.OrganizerNameFa, e.OrganizerPhoneNumber, e.OrganizerEmail,
         e.CoverImageUrl, e.IsFree, e.Price, e.Currency, e.Status, e.IsPublished,
         e.CreatedByUserId, e.CreatedAtUtc, e.UpdatedAtUtc);
 
     private static EventListItemDto ToListItemDto(Event e) => new(
-        e.Id, e.Title, e.Slug, e.City, e.StartsAtUtc, e.IsFree, e.Price, e.Currency, e.Status, e.IsPublished, e.CoverImageUrl, e.BusinessId);
+        e.Id, e.Title, e.TitleFa, e.Slug, e.City, e.CityFa, e.StartsAtUtc, e.IsFree, e.Price, e.Currency, e.Status, e.IsPublished, e.CoverImageUrl, e.BusinessId);
 }

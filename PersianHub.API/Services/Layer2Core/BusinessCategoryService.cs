@@ -15,7 +15,7 @@ public sealed class BusinessCategoryService(ApplicationDbContext db) : IBusiness
             .AsNoTracking()
             .Where(c => c.IsActive)
             .OrderBy(c => c.DisplayOrder)
-            .Select(c => new BusinessCategoryDto(c.Id, c.Name, c.Slug, c.Description, c.DisplayOrder, c.IsActive))
+            .Select(c => new BusinessCategoryDto(c.Id, c.Name, c.NameFa, c.Slug, c.Description, c.DescriptionFa, c.DisplayOrder, c.IsActive))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<BusinessCategoryDto>>.Success(categories);
@@ -26,7 +26,7 @@ public sealed class BusinessCategoryService(ApplicationDbContext db) : IBusiness
         var categories = await db.BusinessCategories
             .AsNoTracking()
             .OrderBy(c => c.DisplayOrder)
-            .Select(c => new BusinessCategoryDto(c.Id, c.Name, c.Slug, c.Description, c.DisplayOrder, c.IsActive))
+            .Select(c => new BusinessCategoryDto(c.Id, c.Name, c.NameFa, c.Slug, c.Description, c.DescriptionFa, c.DisplayOrder, c.IsActive))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<BusinessCategoryDto>>.Success(categories);
@@ -51,8 +51,10 @@ public sealed class BusinessCategoryService(ApplicationDbContext db) : IBusiness
         var entity = new BusinessCategory
         {
             Name = dto.Name.Trim(),
+            NameFa = dto.NameFa?.Trim(),
             Slug = slug.Trim(),
             Description = dto.Description?.Trim(),
+            DescriptionFa = dto.DescriptionFa?.Trim(),
             DisplayOrder = dto.DisplayOrder,
             IsActive = dto.IsActive
         };
@@ -70,8 +72,10 @@ public sealed class BusinessCategoryService(ApplicationDbContext db) : IBusiness
             return Result<BusinessCategoryDto>.Failure($"Business category with id {id} not found.", ErrorCodes.NotFound);
 
         entity.Name = dto.Name.Trim();
+        entity.NameFa = dto.NameFa?.Trim();
         entity.Slug = (dto.Slug ?? dto.Name.ToLowerInvariant().Replace(" ", "-")).Trim();
         entity.Description = dto.Description?.Trim();
+        entity.DescriptionFa = dto.DescriptionFa?.Trim();
         entity.DisplayOrder = dto.DisplayOrder;
         entity.IsActive = dto.IsActive;
 
@@ -111,5 +115,5 @@ public sealed class BusinessCategoryService(ApplicationDbContext db) : IBusiness
     }
 
     private static BusinessCategoryDto ToDto(BusinessCategory c) =>
-        new(c.Id, c.Name, c.Slug, c.Description, c.DisplayOrder, c.IsActive);
+        new(c.Id, c.Name, c.NameFa, c.Slug, c.Description, c.DescriptionFa, c.DisplayOrder, c.IsActive);
 }

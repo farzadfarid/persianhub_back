@@ -22,3 +22,12 @@ public record FavoriteListItemDto(
     int ReferenceId,
     DateTime CreatedAtUtc
 );
+
+public record BusinessFollowerDto(
+    int AppUserId,
+    string Name,
+    string Email,
+    DateTime SavedAtUtc
+);
+
+public record FavoriteCountDto(int Count);

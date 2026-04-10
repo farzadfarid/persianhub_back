@@ -64,12 +64,18 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<string>("BioFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("DisplayNameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -81,6 +87,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("FirstNameFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -88,6 +97,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastNameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -201,6 +213,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DiscountType")
                         .HasColumnType("int");
 
@@ -237,6 +252,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("TitleFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -286,6 +304,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DiscountType")
                         .HasColumnType("int");
 
@@ -312,10 +333,16 @@ namespace PersianHub.API.Migrations
                     b.Property<string>("TermsAndConditions")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TermsAndConditionsFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("TitleFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -375,6 +402,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
@@ -385,6 +415,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -484,10 +517,16 @@ namespace PersianHub.API.Migrations
                     b.Property<string>("AddressLine")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("AddressLineFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("BusinessId")
                         .HasColumnType("int");
 
                     b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CityFa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
@@ -511,6 +550,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("EndsAtUtc")
                         .HasColumnType("datetime2");
 
@@ -524,6 +566,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("LocationNameFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OrganizerEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -531,6 +576,9 @@ namespace PersianHub.API.Migrations
                     b.Property<string>("OrganizerName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("OrganizerNameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OrganizerPhoneNumber")
                         .HasMaxLength(20)
@@ -544,6 +592,9 @@ namespace PersianHub.API.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Region")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RegionFa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
@@ -561,6 +612,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("TitleFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -616,6 +670,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
@@ -626,6 +683,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -829,6 +889,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ExpiresAtUtc")
                         .HasColumnType("datetime2");
 
@@ -861,6 +924,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("TitleFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -1004,9 +1070,15 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("AddressLineFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("City")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CityFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -1019,6 +1091,9 @@ namespace PersianHub.API.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -1056,6 +1131,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("OwnerUserId")
                         .HasColumnType("int");
 
@@ -1070,6 +1148,9 @@ namespace PersianHub.API.Migrations
                     b.Property<string>("Region")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RegionFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -1113,6 +1194,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
@@ -1123,6 +1207,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -1394,6 +1481,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -1741,6 +1831,9 @@ namespace PersianHub.API.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("DescriptionFa")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
@@ -1754,6 +1847,9 @@ namespace PersianHub.API.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("NameFa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)

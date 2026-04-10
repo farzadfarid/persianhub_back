@@ -43,8 +43,10 @@ public sealed class BusinessService(
         var business = new Business
         {
             Name = request.Name.Trim(),
+            NameFa = request.NameFa?.Trim(),
             Slug = slug,
             Description = request.Description?.Trim(),
+            DescriptionFa = request.DescriptionFa?.Trim(),
             PhoneNumber = request.PhoneNumber?.Trim(),
             Email = request.Email?.Trim(),
             Website = request.Website?.Trim(),
@@ -52,8 +54,11 @@ public sealed class BusinessService(
             TelegramUrl = request.TelegramUrl?.Trim(),
             WhatsAppNumber = request.WhatsAppNumber?.Trim(),
             AddressLine = request.AddressLine?.Trim(),
+            AddressLineFa = request.AddressLineFa?.Trim(),
             City = request.City?.Trim(),
+            CityFa = request.CityFa?.Trim(),
             Region = request.Region?.Trim(),
+            RegionFa = request.RegionFa?.Trim(),
             PostalCode = request.PostalCode?.Trim(),
             Country = string.IsNullOrWhiteSpace(request.Country) ? "Sweden" : request.Country.Trim(),
             Latitude = request.Latitude,
@@ -120,7 +125,7 @@ public sealed class BusinessService(
             .OrderByDescending(b => b.IsFeatured)
             .ThenBy(b => b.Name)
             .Select(b => new BusinessListItemDto(
-                b.Id, b.Name, b.Slug, b.City, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.IsActive))
+                b.Id, b.Name, b.NameFa, b.Slug, b.City, b.CityFa, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.IsActive))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<BusinessListItemDto>>.Success(businesses);
@@ -138,7 +143,7 @@ public sealed class BusinessService(
             .OrderByDescending(b => b.IsFeatured)
             .ThenBy(b => b.Name)
             .Select(b => new BusinessListItemDto(
-                b.Id, b.Name, b.Slug, b.City, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.IsActive))
+                b.Id, b.Name, b.NameFa, b.Slug, b.City, b.CityFa, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.IsActive))
             .ToListAsync(ct);
 
         return Result<IReadOnlyList<BusinessListItemDto>>.Success(businesses);
@@ -158,7 +163,9 @@ public sealed class BusinessService(
             return Result<BusinessDetailsDto>.Failure(ownershipCheck.Error!, ownershipCheck.ErrorCode);
 
         business.Name = request.Name.Trim();
+        business.NameFa = request.NameFa?.Trim();
         business.Description = request.Description?.Trim();
+        business.DescriptionFa = request.DescriptionFa?.Trim();
         business.PhoneNumber = request.PhoneNumber?.Trim();
         business.Email = request.Email?.Trim();
         business.Website = request.Website?.Trim();
@@ -166,8 +173,11 @@ public sealed class BusinessService(
         business.TelegramUrl = request.TelegramUrl?.Trim();
         business.WhatsAppNumber = request.WhatsAppNumber?.Trim();
         business.AddressLine = request.AddressLine?.Trim();
+        business.AddressLineFa = request.AddressLineFa?.Trim();
         business.City = request.City?.Trim();
+        business.CityFa = request.CityFa?.Trim();
         business.Region = request.Region?.Trim();
+        business.RegionFa = request.RegionFa?.Trim();
         business.PostalCode = request.PostalCode?.Trim();
         business.Country = string.IsNullOrWhiteSpace(request.Country) ? "Sweden" : request.Country.Trim();
         business.Latitude = request.Latitude;
@@ -221,9 +231,10 @@ public sealed class BusinessService(
     }
 
     private static BusinessDetailsDto ToDetailsDto(Business b) => new(
-        b.Id, b.Name, b.Slug, b.LogoUrl, b.Description, b.PhoneNumber, b.Email, b.Website,
-        b.InstagramUrl, b.TelegramUrl, b.WhatsAppNumber, b.AddressLine, b.City,
-        b.Region, b.PostalCode, b.Country, b.Latitude, b.Longitude,
+        b.Id, b.Name, b.NameFa, b.Slug, b.LogoUrl, b.Description, b.DescriptionFa,
+        b.PhoneNumber, b.Email, b.Website, b.InstagramUrl, b.TelegramUrl, b.WhatsAppNumber,
+        b.AddressLine, b.AddressLineFa, b.City, b.CityFa, b.Region, b.RegionFa,
+        b.PostalCode, b.Country, b.Latitude, b.Longitude,
         b.IsVerified, b.IsClaimed, b.IsFeatured, b.IsActive, b.OwnerUserId,
         b.CreatedAtUtc, b.UpdatedAtUtc,
         b.Images.OrderBy(i => i.DisplayOrder)

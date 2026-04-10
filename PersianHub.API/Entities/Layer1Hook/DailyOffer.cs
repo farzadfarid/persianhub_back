@@ -9,8 +9,10 @@ public class DailyOffer : AuditableEntity
     public int Id { get; set; }
     public int BusinessId { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string? TitleFa { get; set; }
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? DescriptionFa { get; set; }
     public DiscountType DiscountType { get; set; }
     public decimal DiscountValue { get; set; }
     public decimal? OriginalPrice { get; set; }

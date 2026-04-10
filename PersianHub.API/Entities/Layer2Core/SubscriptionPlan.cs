@@ -7,8 +7,10 @@ public class SubscriptionPlan : AuditableEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string? NameFa { get; set; }
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? DescriptionFa { get; set; }
     public decimal Price { get; set; }
     public string Currency { get; set; } = "SEK";
     public SubscriptionBillingCycle BillingCycle { get; set; }

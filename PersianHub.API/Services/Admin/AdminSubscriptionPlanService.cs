@@ -31,8 +31,10 @@ public sealed class AdminSubscriptionPlanService(
         var plan = new SubscriptionPlan
         {
             Name = dto.Name.Trim(),
+            NameFa = dto.NameFa?.Trim(),
             Code = code,
             Description = dto.Description?.Trim(),
+            DescriptionFa = dto.DescriptionFa?.Trim(),
             Price = dto.Price,
             Currency = string.IsNullOrWhiteSpace(dto.Currency) ? "SEK" : dto.Currency.Trim().ToUpperInvariant(),
             BillingCycle = dto.BillingCycle,
@@ -66,7 +68,9 @@ public sealed class AdminSubscriptionPlanService(
             return Result<SubscriptionPlanDto>.Failure($"Subscription plan with id {id} not found.", ErrorCodes.NotFound);
 
         plan.Name = dto.Name.Trim();
+        plan.NameFa = dto.NameFa?.Trim();
         plan.Description = dto.Description?.Trim();
+        plan.DescriptionFa = dto.DescriptionFa?.Trim();
         plan.Price = dto.Price;
         plan.Currency = string.IsNullOrWhiteSpace(dto.Currency) ? "SEK" : dto.Currency.Trim().ToUpperInvariant();
         plan.BillingCycle = dto.BillingCycle;
@@ -103,7 +107,7 @@ public sealed class AdminSubscriptionPlanService(
     }
 
     private static SubscriptionPlanDto ToDto(SubscriptionPlan p) => new(
-        p.Id, p.Name, p.Code, p.Description, p.Price, p.Currency, p.BillingCycle,
+        p.Id, p.Name, p.NameFa, p.Code, p.Description, p.DescriptionFa, p.Price, p.Currency, p.BillingCycle,
         p.MaxImages, p.CanBeFeatured, p.PriorityInSearch, p.AllowsDeals, p.AllowsAnalytics,
         p.IsActive, p.DisplayOrder);
 }

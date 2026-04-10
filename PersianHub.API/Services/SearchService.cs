@@ -36,7 +36,9 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             var kw = request.Keyword.Trim().ToLower();
             query = query.Where(b =>
                 b.Name.ToLower().Contains(kw) ||
-                (b.Description != null && b.Description.ToLower().Contains(kw)));
+                (b.NameFa != null && b.NameFa.ToLower().Contains(kw)) ||
+                (b.Description != null && b.Description.ToLower().Contains(kw)) ||
+                (b.DescriptionFa != null && b.DescriptionFa.ToLower().Contains(kw)));
         }
 
         if (request.CategoryId.HasValue)
@@ -51,7 +53,7 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
         // Project with computed ranking fields — single SQL query.
         var projected = query.Select(b => new
         {
-            b.Id, b.Name, b.Slug, b.City, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.CreatedAtUtc,
+            b.Id, b.Name, b.NameFa, b.Slug, b.City, b.CityFa, b.PhoneNumber, b.LogoUrl, b.IsVerified, b.IsFeatured, b.CreatedAtUtc,
             AverageRating = b.Reviews
                 .Where(r => r.Status == ReviewStatus.Approved)
                 .Average(r => (double?)r.Rating) ?? 0.0,
@@ -71,7 +73,7 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(x => new BusinessSearchItemDto(
-                x.Id, x.Name, x.Slug, x.City, x.PhoneNumber, x.LogoUrl,
+                x.Id, x.Name, x.NameFa, x.Slug, x.City, x.CityFa, x.PhoneNumber, x.LogoUrl,
                 x.IsVerified, x.IsFeatured, x.AverageRating, x.ReviewCount))
             .ToListAsync(ct);
 
@@ -92,7 +94,9 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             var kw = request.Keyword.Trim().ToLower();
             query = query.Where(o =>
                 o.Title.ToLower().Contains(kw) ||
-                (o.Description != null && o.Description.ToLower().Contains(kw)));
+                (o.TitleFa != null && o.TitleFa.ToLower().Contains(kw)) ||
+                (o.Description != null && o.Description.ToLower().Contains(kw)) ||
+                (o.DescriptionFa != null && o.DescriptionFa.ToLower().Contains(kw)));
         }
 
         if (!string.IsNullOrWhiteSpace(request.City))
@@ -116,7 +120,7 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             .Take(pageSize)
             .Select(o => new OfferSearchItemDto(
                 o.Id, o.BusinessId, o.Business.Name, o.Business.Slug,
-                o.Title, o.Slug, o.OriginalPrice, o.DiscountedPrice,
+                o.Title, o.TitleFa, o.Slug, o.OriginalPrice, o.DiscountedPrice,
                 o.DiscountValue, o.Currency, o.EndsAtUtc, o.CoverImageUrl))
             .ToListAsync(ct);
 
@@ -137,7 +141,9 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             var kw = request.Keyword.Trim().ToLower();
             query = query.Where(e =>
                 e.Title.ToLower().Contains(kw) ||
-                (e.Description != null && e.Description.ToLower().Contains(kw)));
+                (e.TitleFa != null && e.TitleFa.ToLower().Contains(kw)) ||
+                (e.Description != null && e.Description.ToLower().Contains(kw)) ||
+                (e.DescriptionFa != null && e.DescriptionFa.ToLower().Contains(kw)));
         }
 
         if (!string.IsNullOrWhiteSpace(request.City))
@@ -163,7 +169,7 @@ public sealed class SearchService(ApplicationDbContext db) : ISearchService
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(e => new EventSearchItemDto(
-                e.Id, e.Title, e.Slug, e.City,
+                e.Id, e.Title, e.TitleFa, e.Slug, e.City, e.CityFa,
                 e.StartsAtUtc, e.EndsAtUtc,
                 e.IsFree, e.Price, e.Currency, e.CoverImageUrl))
             .ToListAsync(ct);

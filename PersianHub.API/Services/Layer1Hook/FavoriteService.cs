@@ -85,5 +85,43 @@ public sealed class FavoriteService(ApplicationDbContext db, IDateTimeProvider c
         return Result<bool>.Success(isFavorited);
     }
 
+    public async Task<Result<int>> GetCountByReferenceAsync(ReferenceType referenceType, int referenceId, CancellationToken ct = default)
+    {
+        var count = await db.Favorites
+            .AsNoTracking()
+            .CountAsync(f => f.ReferenceType == referenceType && f.ReferenceId == referenceId, ct);
+
+        return Result<int>.Success(count);
+    }
+
+    public async Task<Result<IReadOnlyList<BusinessFollowerDto>>> GetBusinessFollowersAsync(int businessId, CancellationToken ct = default)
+    {
+        var rows = await db.Favorites
+            .AsNoTracking()
+            .Where(f => f.ReferenceType == ReferenceType.Business && f.ReferenceId == businessId)
+            .Join(db.AppUsers, f => f.AppUserId, u => u.Id, (f, u) => new
+            {
+                u.Id,
+                u.DisplayName,
+                u.FirstName,
+                u.LastName,
+                u.Email,
+                SavedAtUtc = f.CreatedAtUtc,
+            })
+            .OrderByDescending(x => x.SavedAtUtc)
+            .ToListAsync(ct);
+
+        var items = rows.Select(x => new BusinessFollowerDto(
+            x.Id,
+            !string.IsNullOrWhiteSpace(x.DisplayName)
+                ? x.DisplayName
+                : $"{x.FirstName} {x.LastName}".Trim(),
+            x.Email,
+            x.SavedAtUtc
+        )).ToList();
+
+        return Result<IReadOnlyList<BusinessFollowerDto>>.Success(items);
+    }
+
     private static FavoriteDto ToDto(Favorite f) => new(f.Id, f.AppUserId, f.ReferenceType, f.ReferenceId, f.CreatedAtUtc);
 }

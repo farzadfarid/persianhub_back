@@ -34,6 +34,8 @@ public record ReviewListItemDto(
     int AppUserId,
     int Rating,
     string? Title,
+    string? Comment,
     ReviewStatus Status,
-    DateTime CreatedAtUtc
+    DateTime CreatedAtUtc,
+    int LikeCount
 );

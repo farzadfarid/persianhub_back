@@ -5,6 +5,7 @@ namespace PersianHub.API.Interfaces.Layer2Core;
 
 public interface IInteractionService
 {
+    Task<Result<IReadOnlyList<InteractionListItemDto>>> GetAllAsync(CancellationToken ct = default);
     Task<Result<InteractionDto>> CreateAsync(CreateInteractionDto request, CancellationToken ct = default);
     Task<Result<InteractionDto>> GetByIdAsync(int id, CancellationToken ct = default);
     Task<Result<IReadOnlyList<InteractionListItemDto>>> GetByBusinessIdAsync(int businessId, CancellationToken ct = default);

@@ -7,8 +7,10 @@ public class Business : AuditableEntity
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string? NameFa { get; set; }
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? DescriptionFa { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public string? Website { get; set; }
@@ -16,8 +18,11 @@ public class Business : AuditableEntity
     public string? TelegramUrl { get; set; }
     public string? WhatsAppNumber { get; set; }
     public string? AddressLine { get; set; }
+    public string? AddressLineFa { get; set; }
     public string? City { get; set; }
+    public string? CityFa { get; set; }
     public string? Region { get; set; }
+    public string? RegionFa { get; set; }
     public string? PostalCode { get; set; }
     public string Country { get; set; } = "Sweden";
     public decimal? Latitude { get; set; }

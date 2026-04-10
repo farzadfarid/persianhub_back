@@ -28,10 +28,31 @@ public static class ServiceCollectionExtensions
         // Search / Discovery
         services.AddScoped<ISearchService, SearchService>();
 
-        // Admin
+        // Admin — Phase 1: Content Visibility
         services.AddScoped<IAdminSubscriptionPlanService, AdminSubscriptionPlanService>();
         services.AddScoped<IAdminBusinessClaimService, AdminBusinessClaimService>();
         services.AddScoped<IAdminBusinessSuggestionService, AdminBusinessSuggestionService>();
+        services.AddScoped<IAdminDealService, AdminDealService>();
+        services.AddScoped<IAdminDailyOfferService, AdminDailyOfferService>();
+        services.AddScoped<IAdminEventService, AdminEventService>();
+        services.AddScoped<IAdminReviewService, AdminReviewService>();
+        services.AddScoped<IAdminReportService, AdminReportService>();
+
+        // Admin — Phase 2: Monetization and Growth
+        services.AddScoped<IAdminPaymentService, AdminPaymentService>();
+        services.AddScoped<IAdminReferralCodeService, AdminReferralCodeService>();
+        services.AddScoped<IAdminReferralService, AdminReferralService>();
+        services.AddScoped<IAdminInviteService, AdminInviteService>();
+        services.AddScoped<IAdminInviteRewardService, AdminInviteRewardService>();
+
+        // Admin — Phase 3: Community and Moderation
+        services.AddScoped<IAdminCommunityPostService, AdminCommunityPostService>();
+        services.AddScoped<IAdminCommentService, AdminCommentService>();
+        services.AddScoped<IAdminReactionService, AdminReactionService>();
+        services.AddScoped<IAdminReviewReactionService, AdminReviewReactionService>();
+
+        // Admin — Phase 4: System Operations and Observability
+        services.AddScoped<IAdminAuditLogService, AdminAuditLogService>();
 
         // Auth
         services.AddScoped<IAuthService, AuthService>();
@@ -47,22 +68,28 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<IBusinessCategoryService, BusinessCategoryService>();
+        services.AddScoped<IBusinessTagService, BusinessTagService>();
         services.AddScoped<IContactRequestService, ContactRequestService>();
         services.AddScoped<IInteractionService, InteractionService>();
 
         // Layer 1 — Hook (Retention Engine)
+        services.AddScoped<IDealService, DealService>();
         services.AddScoped<IDailyOfferService, DailyOfferService>();
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IFavoriteService, FavoriteService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IUserActivityService, UserActivityService>();
+        services.AddScoped<IDealCategoryService, DealCategoryService>();
+        services.AddScoped<IEventCategoryService, EventCategoryService>();
 
         // Layer 3 — Network Effect (Growth Engine)
         services.AddScoped<IReferralService, ReferralService>();
         services.AddScoped<IInviteService, InviteService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IReviewReactionService, ReviewReactionService>();
         services.AddScoped<IBusinessSuggestionService, BusinessSuggestionService>();
         services.AddScoped<IShareLogService, ShareLogService>();
+        services.AddScoped<IReportService, ReportService>();
 
         return services;
     }

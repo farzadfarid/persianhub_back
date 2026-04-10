@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PersianHub.API.Common;
+using PersianHub.API.Data;
+using PersianHub.API.DTOs.Admin;
 using PersianHub.API.DTOs.Layer2Core;
 using PersianHub.API.Interfaces.Layer2Core;
 
@@ -13,13 +16,40 @@ namespace PersianHub.API.Controllers.Admin;
 /// </summary>
 [Route("api/v1/admin/businesses")]
 [Authorize(Roles = AppRoles.Admin)]
-public sealed class AdminBusinessesController(IBusinessService businessService) : ApiControllerBase
+public sealed class AdminBusinessesController(
+    IBusinessService businessService,
+    ApplicationDbContext db) : ApiControllerBase
 {
-    /// <summary>Returns all businesses on the platform.</summary>
+    /// <summary>Returns all businesses with owner info.</summary>
     [HttpGet]
-    [ProducesResponseType(typeof(IReadOnlyList<BusinessListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IReadOnlyList<AdminBusinessListItemDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(CancellationToken ct)
-        => MapResult(await businessService.GetAllAsync(ct));
+    {
+        var businesses = await db.Businesses
+            .AsNoTracking()
+            .OrderByDescending(b => b.Id)
+            .Select(b => new AdminBusinessListItemDto(
+                b.Id,
+                b.Name,
+                b.NameFa,
+                b.Slug,
+                b.City,
+                b.PhoneNumber,
+                b.Email,
+                b.LogoUrl,
+                b.IsVerified,
+                b.IsFeatured,
+                b.IsActive,
+                b.OwnerUserId,
+                b.OwnerUser != null ? b.OwnerUser.FirstName : null,
+                b.OwnerUser != null ? b.OwnerUser.LastName : null,
+                b.OwnerUser != null ? b.OwnerUser.Email : null,
+                b.CreatedAtUtc
+            ))
+            .ToListAsync(ct);
+
+        return Ok(businesses);
+    }
 
     /// <summary>Returns full details for any business by id.</summary>
     [HttpGet("{id:int}")]

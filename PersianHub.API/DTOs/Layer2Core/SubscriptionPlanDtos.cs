@@ -5,8 +5,10 @@ namespace PersianHub.API.DTOs.Layer2Core;
 public record SubscriptionPlanDto(
     int Id,
     string Name,
+    string? NameFa,
     string Code,
     string? Description,
+    string? DescriptionFa,
     decimal Price,
     string Currency,
     SubscriptionBillingCycle BillingCycle,
@@ -22,6 +24,7 @@ public record SubscriptionPlanDto(
 public record SubscriptionPlanListItemDto(
     int Id,
     string Name,
+    string? NameFa,
     string Code,
     decimal Price,
     string Currency,

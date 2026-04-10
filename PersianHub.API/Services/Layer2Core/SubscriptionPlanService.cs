@@ -57,10 +57,10 @@ public sealed class SubscriptionPlanService(ApplicationDbContext db) : ISubscrip
     }
 
     private static SubscriptionPlanDto ToDto(SubscriptionPlan p) => new(
-        p.Id, p.Name, p.Code, p.Description, p.Price, p.Currency, p.BillingCycle,
+        p.Id, p.Name, p.NameFa, p.Code, p.Description, p.DescriptionFa, p.Price, p.Currency, p.BillingCycle,
         p.MaxImages, p.CanBeFeatured, p.PriorityInSearch, p.AllowsDeals, p.AllowsAnalytics,
         p.IsActive, p.DisplayOrder);
 
     private static SubscriptionPlanListItemDto ToListItemDto(SubscriptionPlan p) => new(
-        p.Id, p.Name, p.Code, p.Price, p.Currency, p.BillingCycle, p.IsActive, p.DisplayOrder);
+        p.Id, p.Name, p.NameFa, p.Code, p.Price, p.Currency, p.BillingCycle, p.IsActive, p.DisplayOrder);
 }

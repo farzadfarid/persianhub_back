@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersianHub.API.DTOs.Layer1Hook;
+using PersianHub.API.Enums.Common;
 using PersianHub.API.Interfaces.Layer1Hook;
 
 namespace PersianHub.API.Controllers.Layer1Hook;
@@ -49,6 +50,28 @@ public sealed class FavoritesController(IFavoriteService favoriteService) : ApiC
     public async Task<IActionResult> GetByUser(int userId, CancellationToken ct)
     {
         var result = await favoriteService.GetByUserIdAsync(userId, ct);
+        return MapResult(result);
+    }
+
+    /// <summary>Returns the total number of times an item has been favorited (public).</summary>
+    [HttpGet("count/{referenceType}/{referenceId:int}")]
+    [ProducesResponseType(typeof(FavoriteCountDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetCount(string referenceType, int referenceId, CancellationToken ct)
+    {
+        if (!Enum.TryParse<ReferenceType>(referenceType, ignoreCase: true, out var refType))
+            return BadRequest($"Unknown referenceType: {referenceType}");
+
+        var result = await favoriteService.GetCountByReferenceAsync(refType, referenceId, ct);
+        return result.IsSuccess ? Ok(new FavoriteCountDto(result.Value)) : MapResult(result);
+    }
+
+    /// <summary>Returns the list of users who saved a specific business (owner only).</summary>
+    [HttpGet("business/{businessId:int}/followers")]
+    [ProducesResponseType(typeof(IReadOnlyList<BusinessFollowerDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetBusinessFollowers(int businessId, CancellationToken ct)
+    {
+        var result = await favoriteService.GetBusinessFollowersAsync(businessId, ct);
         return MapResult(result);
     }
 }

@@ -9,8 +9,10 @@ public class MarketplaceListing : AuditableEntity
     public int Id { get; set; }
     public int AppUserId { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string? TitleFa { get; set; }
     public string Slug { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? DescriptionFa { get; set; }
     public MarketplaceListingType ListingType { get; set; }
     public string? Category { get; set; }
     public decimal? Price { get; set; }

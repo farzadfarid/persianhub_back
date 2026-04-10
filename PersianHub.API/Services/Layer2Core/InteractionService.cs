@@ -10,6 +10,17 @@ namespace PersianHub.API.Services.Layer2Core;
 
 public sealed class InteractionService(ApplicationDbContext db, IDateTimeProvider clock) : IInteractionService
 {
+    public async Task<Result<IReadOnlyList<InteractionListItemDto>>> GetAllAsync(CancellationToken ct = default)
+    {
+        var items = await db.Interactions
+            .AsNoTracking()
+            .OrderByDescending(i => i.CreatedAtUtc)
+            .Select(i => new InteractionListItemDto(i.Id, i.BusinessId, i.AppUserId, i.InteractionType, i.CreatedAtUtc))
+            .ToListAsync(ct);
+
+        return Result<IReadOnlyList<InteractionListItemDto>>.Success(items);
+    }
+
     public async Task<Result<InteractionDto>> CreateAsync(CreateInteractionDto request, CancellationToken ct = default)
     {
         var businessExists = await db.Businesses.AnyAsync(b => b.Id == request.BusinessId, ct);
